@@ -1253,7 +1253,9 @@ if (txpinterface == 'public')
 	 $name = fetch('Realname',$ign_user_db,'user_id',$user_id);
 	 if ($name) {
 		 $rs = safe_delete($ign_user_db,"user_id = '$user_id'");
-		 if ($rs) ign_admin(messenger('user',$name,'deleted'));
+		 if ($rs) {
+			ign_admin(messenger('user',$name,'deleted'));
+		 }
 	 }
  }
 
@@ -1643,11 +1645,11 @@ if (txpinterface == 'public')
 		 ), $atts, 0)
 	 );
 
-	 if(!empty($return_path)) list($return_path) = explode('?', $_SERVER['REQUEST_URI']);
+	 list($return_path) = (!empty($return_path)) ? explode('?', $return_path) : explode('?', $_SERVER['REQUEST_URI']);
 
 	 $text = (!empty($thing)) ? $thing : (!empty($linktext) ? $linktext : ign_gTxt('logout_linktext'));
 
-	$q = (!empty($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING']."&logout=1" : 'logout=1';
+	 $q = (!empty($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING']."&logout=1" : 'logout=1';
 
 	 $o[] = "<a href='{$return_path}?$q'";
 	 $o[] = (!empty($class)) ? "class='$class'" : '';
