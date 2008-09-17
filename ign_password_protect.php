@@ -1404,17 +1404,28 @@ if (txpinterface == 'public')
 // This is a slight alteration for .co.uk like domains...
 // Thanks to Gerhard Lazu for this code.
 
-  function ign_getDomain() {
-    $d = explode('.', $_SERVER['HTTP_HOST']);
-    // $d_copy keeps code simple
-    $d_copy = $d;
-    // Make sure the last 2 values look like TLDs (no more than 3 characters). Not bulletproof (.info? .mobi?), but simple.
-    if ( (count($d) > 2) && (strlen(array_pop($d_copy)) < 4) && (strlen(array_pop($d_copy)) < 4) ) {
-      return join('.', array_slice($d, -3, 3));
-    }
-    else {
-      return join('.', array_slice($d, -2, 2));
-    }
+ function ign_getDomain() {
+	  $debug = false;
+	  $res = $_SERVER['HTTP_HOST'];
+
+	  if (false === ip2long($res)) { # This is a normal domain string
+		$d = explode('.', $_SERVER['HTTP_HOST']);
+		// $d_copy keeps code simple
+		$d_copy = $d;
+		// Make sure the last 2 values look like TLDs (no more than 3 characters). Not bulletproof (.info? .mobi?), but simple.
+		if ( (count($d) > 2) && (strlen(array_pop($d_copy)) < 4) && (strlen(array_pop($d_copy)) < 4) ) {
+			$res = join('.', array_slice($d, -3, 3));
+		}
+		else {
+			$res = join('.', array_slice($d, -2, 2));
+		}
+		$res .= '.';	# ensure canonical end-of-string
+	  }
+	  else {
+		  # This is an ip address. No action needed
+	  }
+	  if ($debug) dmp( $res );
+	  return $res;
   }
 
 // -------------------------------------------------------------
